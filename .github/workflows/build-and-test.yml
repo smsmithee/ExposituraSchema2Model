@@ -1,0 +1,26 @@
+---
+name: Build and Test
+on: [push]
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Build and Test
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Setup Maven Action
+        uses: s4u/setup-maven-action@v1.19.0
+        with:
+          maven-version: 3.9.11
+          java-distribution: 'temurin'
+          java-version: '25'
+
+      - name: Build and test
+        run: mvn --batch-mode --no-transfer-progress clean install
+        

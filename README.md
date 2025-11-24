@@ -40,75 +40,38 @@ Configuration Options
 
 Name | Type | Default | Description |
 |---|---|---|---|
-<addCompileSourceRoot> | boolean | true | Add the output directory to the project as a source root, so that the generated java types are compiled and included in the project artifact |
-<annotationStyle>| String | jackson2 | The style of annotations to use in the generated Java types. Supports jackson2, gson, and none |
-<classNamePrefix> | String | null | Whether to add a prefix to generated classes |
-<classNameSuffix> | String | null | Whether to add a suffix to generated classes |
-<constructorsRequiredPropertiesOnly> | boolean | false | The 'constructorsRequiredPropertiesOnly' configuration option. This is a legacy configuration option used to turn on isIncludeRequiredPropertiesConstructor() and off the isIncludeAllPropertiesConstructor() configuration options. It is specifically tied to the isIncludeConstructors() property, and will do nothing if that property is not enabled |
-<customAnnotator> | String | com.expositura.schema2model | A fully qualified class name, referring to a custom annotator class that implements org.jsonschema2pojo.Annotator and will be used in addition to the one chosen by annotationStyle. If you want to use the custom annotator alone, set annotationStyle to none |
-<customDatePattern> | String | null | A custom pattern to use when formatting date fields during serialization. Requires support from your JSON binding library |
-<customDateTimePattern> | String | null | A custom pattern to use when formatting date-time fields during serialization. Requires support from your JSON binding library.
-<customRuleFactory> | String | com.expositura.rules.RuleFactory | A fully qualified class name, referring to an class that extends org.jsonschema2pojo.rules.RuleFactory and will be used to create instances of Rules used for code generation |
-<customTimePattern> | String | null | A custom pattern to use when formatting time fields during serialization. Requires support from your JSON binding library |
-
-
-<dateTimeType>	String	0.4.22	What type to use instead of string when adding string type fields of format date-time to generated Java types.
-User property is: jsonschema2pojo.dateTimeType.
-<dateType>	String	0.4.22	What type to use instead of string when adding string type fields of format date (not date-time) to generated Java types.
-User property is: jsonschema2pojo.dateType.
-<excludes>	String[]	0.4.3	List of file patterns to exclude. This only applies to the initial scan of the file system and will not prevent inclusion through a "$ref" in one of the schemas.
-<fileExtensions>	String[]	0.4.23	The strings (no preceeding dot) that should be considered as file name extensions, and therefore ignored, when creating Java class names.
-User property is: jsonschema2pojo.fileExtensions.
-<formatDateTimes>	boolean	0.4.29	Whether the fields of type `date` are formatted during serialization with a default pattern of yyyy-MM-dd'T'HH:mm:ss.SSSZ.
-Default value is: false.
-User property is: jsonschema2pojo.formatDateTimes.
-<formatDates>	boolean	0.4.33	Whether the fields of type `date` are formatted during serialization with a default pattern of yyyy-MM-dd.
-Default value is: false.
-User property is: jsonschema2pojo.formatDates.
-<formatTimes>	boolean	0.4.36	Whether the fields of type `time` are formatted during serialization with a default pattern of HH:mm:ss.SSS.
-Default value is: false.
-User property is: jsonschema2pojo.formatTimes.
-<formatTypeMapping>	Map<String,String>	1.0.0	(no description)
-User property is: jsonschema2pojo.formatTypeMapping.
-<generateBuilders>	boolean	0.1.2	Whether to generate builder-style methods of the form withXxx(value) (that return this), alongside the standard, void-return setters.
-Default value is: false.
-User property is: jsonschema2pojo.generateBuilders.
-<includeAdditionalProperties>	boolean	0.4.14	Whether to allow 'additional properties' support in objects. Setting this to false will disable additional properties support, regardless of the input schema(s).
-Default value is: true.
-User property is: jsonschema2pojo.includeAdditionalProperties.
-<includeAllPropertiesConstructor>	boolean	1.0.3	The 'includeAllPropertiesConstructor' configuration option. This property works in collaboration with the isIncludeConstructors() configuration option and is incompatible with isConstructorsRequiredPropertiesOnly(), and will have no effect if isIncludeConstructors() is not set to true. If isIncludeConstructors() is set to true then this configuration determines whether the resulting object should include a constructor with all listed properties as parameters.
-Default value is: true.
-User property is: jsonschema2pojo.includeAllPropertiesConstructor.
-<includeConstructorPropertiesAnnotation>	boolean	1.0.2	(no description)
-Default value is: false.
-User property is: jsonschema2pojo.includeConstructorPropertiesAnnotation.
-<includeConstructors>	boolean	0.4.8	Whether to generate constructors or not
-Default value is: false.
-User property is: jsonschema2pojo.includeConstructors.
-<includeCopyConstructor>	boolean	1.0.3	The 'includeCopyConstructor' configuration option. This property works in collaboration with the isIncludeConstructors() configuration option and is incompatible with isConstructorsRequiredPropertiesOnly(), and will have no effect if isIncludeConstructors() is not set to true. If isIncludeConstructors() is set to true then this configuration determines whether the resulting object should include a constructor the class itself as a parameter, with the expectation that all properties from the originating class will assigned to the new class.
-Default value is: false.
-User property is: jsonschema2pojo.includeCopyConstructor.
-<includeDynamicAccessors>	boolean	0.4.17	Whether to include dynamic getters, setters, and builders or to omit these methods.
-User property is: jsonschema2pojo.includeDynamicAccessors.
-<includeDynamicBuilders>	boolean	-	Whether to include dynamic builders or to omit these methods.
-Default value is: false.
-User property is: jsonschema2pojo.includeDynamicBuilders.
-<includeDynamicGetters>	boolean	-	Whether to include dynamic getters or to omit these methods.
-Default value is: false.
-User property is: jsonschema2pojo.includeDynamicGetters.
-<includeDynamicSetters>	boolean	-	Whether to include dynamic setters or to omit these methods.
-Default value is: false.
-User property is: jsonschema2pojo.includeDynamicSetters.
-<includeGeneratedAnnotation>	boolean	-	Whether to include a javax.annotation.Generated (Java 8 and lower) or javax.annotation.processing.Generated (Java 9+) in on generated types. See also: targetVersion.
-Default value is: true.
-User property is: jsonschema2pojo.includeGeneratedAnnotation.
-<includeGetters>	boolean	-	Whether to include getters or to omit this accessor method and create public fields instead
-Default value is: true.
-User property is: jsonschema2pojo.includeGetters.
-<includeHashcodeAndEquals>	boolean	0.3.1	Whether to include hashCode and equals methods in generated Java types.
-Default value is: true.
-User property is: jsonschema2pojo.includeHashcodeAndEquals.
-<includeJsr303Annotations>	boolean	0.3.2	Whether to include JSR-303/349 annotations (for schema rules like minimum, maximum, etc) in generated Java types.
+| <addCompileSourceRoot> | boolean | true | Add the output directory to the project as a source root, so that the generated java types are compiled and included in the project artifact |
+| <annotationStyle>| String | jackson2 | The style of annotations to use in the generated Java types. Supports jackson2, gson, and none |
+| <classNamePrefix> | String | null | Whether to add a prefix to generated classes |
+| <classNameSuffix> | String | null | Whether to add a suffix to generated classes |
+| <constructorsRequiredPropertiesOnly> | boolean | false | The 'constructorsRequiredPropertiesOnly' configuration option. This is a legacy configuration option used to turn on isIncludeRequiredPropertiesConstructor() and off the isIncludeAllPropertiesConstructor() configuration options. It is specifically tied to the isIncludeConstructors() property, and will do nothing if that property is not enabled |
+| <customAnnotator> | String | com.expositura.schema2model | A fully qualified class name, referring to a custom annotator class that implements org.jsonschema2pojo.Annotator and will be used in addition to the one chosen by annotationStyle. If you want to use the custom annotator alone, set annotationStyle to none |
+| <customDatePattern> | String | null | A custom pattern to use when formatting date fields during serialization. Requires support from your JSON binding library |
+| <customDateTimePattern> | String | null | A custom pattern to use when formatting date-time fields during serialization. Requires support from your JSON binding library.
+| <customRuleFactory> | String | com.expositura.rules.RuleFactory | A fully qualified class name, referring to an class that extends org.jsonschema2pojo.rules.RuleFactory and will be used to create instances of Rules used for code generation |
+| <customTimePattern> | String | null | A custom pattern to use when formatting time fields during serialization. Requires support from your JSON binding library |
+| <dateTimeType> | String | String | What type to use instead of string when adding string type fields of format date-time to generated Java types.
+| <dateType> | String | String | What type to use instead of string when adding string type fields of format date (not date-time) to generated Java types.
+| <excludes> | String[] | null | List of file patterns to exclude. This only applies to the initial scan of the file system and will not prevent inclusion through a "$ref" in one of the schemas.
+| <fileExtensions> | String[] | null | The strings (no preceeding dot) that should be considered as file name extensions, and therefore ignored, when creating Java class names.
+| <formatDateTimes> | boolean | false | Whether the fields of type `date` are formatted during serialization with a default pattern of yyyy-MM-dd'T'HH:mm:ss.SSSZ.
+| <formatDates> | boolean | false | Whether the fields of type `date` are formatted during serialization with a default pattern of yyyy-MM-dd.
+| <formatTimes> | boolean | false | Whether the fields of type `time` are formatted during serialization with a default pattern of HH:mm:ss.SSS.
+| <formatTypeMapping> | Map<String,String> | null | (no description)
+| <generateBuilders> | boolean | false | Whether to generate builder-style methods of the form withXxx(value) (that return this), alongside the standard, void-return setters.
+| <includeAdditionalProperties> | boolean | true | Whether to allow 'additional properties' support in objects. Setting this to false will disable additional properties support, regardless of the input schema(s).
+| <includeAllPropertiesConstructor> | boolean | true | The 'includeAllPropertiesConstructor' configuration option. This property works in collaboration with the isIncludeConstructors() configuration option and is incompatible with isConstructorsRequiredPropertiesOnly(), and will have no effect if isIncludeConstructors() is not set to true. If isIncludeConstructors() is set to true then this configuration determines whether the resulting object should include a constructor with all listed properties as parameters.
+| <includeConstructorPropertiesAnnotation> | boolean | false | (no description)
+| <includeConstructors> | boolean | false | Whether to generate constructors or not
+| <includeCopyConstructor> | boolean | false | The 'includeCopyConstructor' configuration option. This property works in collaboration with the isIncludeConstructors() configuration option and is incompatible with isConstructorsRequiredPropertiesOnly(), and will have no effect if isIncludeConstructors() is not set to true. If isIncludeConstructors() is set to true then this configuration determines whether the resulting object should include a constructor the class itself as a parameter, with the expectation that all properties from the originating class will assigned to the new class.
+| <includeDynamicAccessors> | boolean | false | Whether to include dynamic getters, setters, and builders or to omit these methods.
+| <includeDynamicBuilders> | boolean | false | Whether to include dynamic builders or to omit these methods.
+| <includeDynamicGetters> | boolean | false | Whether to include dynamic getters or to omit these methods.
+| <includeDynamicSetters> | boolean | false | Whether to include dynamic setters or to omit these methods.
+| <includeGeneratedAnnotation> | boolean | true | Whether to include a javax.annotation.Generated (Java 8 and lower) or javax.annotation.processing.Generated (Java 9+) in on generated types. See also: targetVersion.
+| <includeGetters> | boolean | true | Whether to include getters or to omit this accessor method and create public fields instead
+| <includeHashcodeAndEquals> | boolean | true | Whether to include hashCode and equals methods in generated Java types.
+| <includeJsr303Annotations> | boolean | false | Whether to include JSR-303/349 annotations (for schema rules like minimum, maximum, etc) in generated Java types.
 Schema rules and the annotation they produce:
 
 maximum = @DecimalMax
@@ -118,11 +81,9 @@ minLength,maxLength = @Size
 pattern = @Pattern
 required = @NotNull
 Any Java fields which are an object or array of objects will be annotated with @Valid to support validation of an entire document tree.
-Default value is: false.
-User property is: jsonschema2pojo.includeJsr303Annotations.
-<includeJsr305Annotations>	boolean	0.4.8	Whether to include JSR-305 annotations (for schema rules like Nullable, NonNull, etc) in generated Java types.
-Default value is: false.
-User property is: jsonschema2pojo.includeJsr305Annotations.
+| <includeJsr305Annotations> | boolean | false | Whether to include JSR-305 annotations (for schema rules like Nullable, NonNull, etc) in generated Java types.
+
+
 <includeRequiredPropertiesConstructor>	boolean	1.0.3	The 'includeRequiredPropertiesConstructor' configuration option. This property works in collaboration with the isIncludeConstructors() configuration option and is incompatible with isConstructorsRequiredPropertiesOnly(), and will have no effect if isIncludeConstructors() is not set to true. If isIncludeConstructors() is set to true then this configuration determines whether the resulting object should include a constructor with only the required properties as parameters.
 Default value is: false.
 User property is: jsonschema2pojo.includeRequiredPropertiesConstructor.
