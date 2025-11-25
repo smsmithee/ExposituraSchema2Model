@@ -7,7 +7,7 @@
     <version>4.0.0</version>
   </parent>
   
-  <version>0.3.0-SNAPSHOT</version>
+  <version>0.3.0</version>
   <groupId>io.github.smsmithee.expositura</groupId>
   <artifactId>schema2model-maven-plugin</artifactId>
   <packaging>maven-plugin</packaging>
