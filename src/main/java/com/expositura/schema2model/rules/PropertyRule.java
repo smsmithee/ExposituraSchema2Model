@@ -270,8 +270,8 @@ public class PropertyRule implements Rule<JDefinedClass, JDefinedClass> {
           isEmptyExp = JOp.cond(
                   c.owner().ref("org.apache.commons.collections4.CollectionUtils").staticInvoke("isEmpty").arg(param),
                   JExpr._null(), param);
-        case "Integer", "Double", "Float", "Boolean", "Long" ->
-          isEmptyExp = JOp.cond(JExpr._null().eq(param), JExpr._null(), param);
+        case "Integer", "Double", "Float", "Boolean", "Long", "Object" ->
+          isEmptyExp = param;
         default ->
           isEmptyExp = JOp.cond(
                   c.owner().ref(param.type().fullName()).staticInvoke("isEmpty").arg(param), JExpr._null(), param);
@@ -329,6 +329,9 @@ public class PropertyRule implements Rule<JDefinedClass, JDefinedClass> {
         switch (listAddParam.type().name()) {
           case "String" -> {
             listAddJBlock._if(c.owner().ref("org.apache.commons.lang3.StringUtils").staticInvoke("isEmpty").arg(listAddParam))._then()._return(JExpr._this());
+          }
+          case "Integer", "Double", "Float", "Boolean", "Long", "Object" -> {
+            listAddJBlock._if(JOp.eq(JExpr._null(), listAddParam))._then()._return(JExpr._null());
           }
           default -> {
             listAddJBlock._if(listAddParam.type().boxify().staticInvoke("isEmpty").arg(listAddParam))._then()._return(JExpr._this());
