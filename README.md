@@ -40,7 +40,7 @@ Configuration Options
 
 | Name | Type | Default | Description |
 |---|---|---|---|
-| <addCompileSourceRoot> | boolean | true | Add the output directory to the project as a source root, so that the generated java types are compiled and included in the project artifact |
+| addCompileSourceRoot | boolean | true | Add the output directory to the project as a source root, so that the generated java types are compiled and included in the project artifact |
 | <annotationStyle>| String | jackson2 | The style of annotations to use in the generated Java types. Supports jackson2, gson, and none |
 | <classNamePrefix> | String | null | Whether to add a prefix to generated classes |
 | <classNameSuffix> | String | null | Whether to add a suffix to generated classes |
