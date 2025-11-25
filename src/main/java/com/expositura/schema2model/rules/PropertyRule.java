@@ -270,7 +270,7 @@ public class PropertyRule implements Rule<JDefinedClass, JDefinedClass> {
           isEmptyExp = JOp.cond(
                   c.owner().ref("org.apache.commons.collections4.CollectionUtils").staticInvoke("isEmpty").arg(param),
                   JExpr._null(), param);
-        case "Integer", "Double", "Float", "Boolean", "Long", "Object" ->
+        case "Integer", "Double", "Float", "Boolean", "Long", "Object", "OffsetDateTime" ->
           isEmptyExp = param;
         default ->
           isEmptyExp = JOp.cond(
