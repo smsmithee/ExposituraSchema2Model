@@ -461,7 +461,7 @@ public interface GenerationConfig {
    * @return The java type to use instead of {@link java.util.Date} when adding date type fields to generate Java types.
    */
   String getDateTimeType();
-
+  
   /**
    * Gets the `dateType` configuration option.
    * <p>
