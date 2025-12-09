@@ -400,6 +400,13 @@ public interface GenerationConfig {
   boolean isIncludeAdditionalProperties();
 
   /**
+   * Gets the 'includeFluentMethods' configuration option.
+   *
+   * @return Whether to include fluent methods which allows method chaining during object construction/manipulation.
+   */
+  boolean isIncludeFluentMethods();
+  
+  /**
    * Gets the 'includeGetters' configuration option.
    *
    * @return Whether to include getters or to omit these accessor methods and create public fields instead.

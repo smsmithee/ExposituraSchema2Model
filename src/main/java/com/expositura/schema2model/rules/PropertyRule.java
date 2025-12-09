@@ -86,6 +86,7 @@ public class PropertyRule implements Rule<JDefinedClass, JDefinedClass> {
     JType propertyType = ruleFactory.getSchemaRule().apply(nodeName, node, parent, jclass, propertySchema);
     propertySchema.setJavaTypeIfEmpty(propertyType);
 
+    boolean isIncludeFluentMethods = ruleFactory.getGenerationConfig().isIncludeFluentMethods();
     boolean isIncludeGetters = ruleFactory.getGenerationConfig().isIncludeGetters();
     boolean isIncludeSetters = ruleFactory.getGenerationConfig().isIncludeSetters();
 
@@ -100,6 +101,12 @@ public class PropertyRule implements Rule<JDefinedClass, JDefinedClass> {
 
     ruleFactory.getAnnotator().propertyField(field, jclass, nodeName, node);
 
+    if (isIncludeFluentMethods) {
+      JMethod adder = addFluentMethods(jclass, field, nodeName, node, isRequired(nodeName, node, schema), useOptional(nodeName, node, schema));
+      ruleFactory.getAnnotator().propertyGetter(adder, jclass, nodeName);
+      propertyAnnotations(nodeName, node, schema, adder);
+    }
+    
     if (isIncludeGetters) {
       JMethod getter = addGetter(jclass, field, nodeName, node, isRequired(nodeName, node, schema), useOptional(nodeName, node, schema));
       ruleFactory.getAnnotator().propertyGetter(getter, jclass, nodeName);
@@ -237,6 +244,68 @@ public class PropertyRule implements Rule<JDefinedClass, JDefinedClass> {
     return returnType;
   }
 
+  private JMethod addFluentMethods(JDefinedClass c, JFieldVar field, String jsonPropertyName, JsonNode node, boolean isRequired, boolean usesOptional) {
+
+    JMethod fluentMethod = c.method(JMod.PUBLIC, c, getFluentName(jsonPropertyName, node));
+
+    JVar param = fluentMethod.param(JMod.FINAL, field.type(), field.name());
+    JBlock body = fluentMethod.body();
+    body.add(JExpr.invoke(getSetterName(jsonPropertyName, node)).arg(param));
+    body._return(JExpr._this());
+    
+    // If this is a list or map object then add an "adder" method
+    switch (field.type().erasure().name()) {
+      case "List" -> {
+        // Build up the method signature
+        final JMethod listAddMethod = c.method(
+                JMod.PUBLIC,
+                c,
+                "add" + StringUtils.capitalize(getFluentName(jsonPropertyName, node)));
+        
+        final JVar listAddParam = listAddMethod.param(JMod.FINAL, field.type().boxify().getTypeParameters().get(0), field.name());
+        final JBlock listAddJBlock = listAddMethod.body();
+        // If String then use StringUtils.isEmpty
+        switch (listAddParam.type().name()) {
+          case "String" -> {
+            listAddJBlock._if(c.owner().ref("org.apache.commons.lang3.StringUtils").staticInvoke("isEmpty").arg(listAddParam))._then()._return(JExpr._this());
+          }
+          case "Integer", "Double", "Float", "Boolean", "Long", "Object" -> {
+            listAddJBlock._if(JOp.eq(JExpr._null(), listAddParam))._then()._return(JExpr._null());
+          }
+          default -> {
+            listAddJBlock._if(listAddParam.type().boxify().staticInvoke("isEmpty").arg(listAddParam))._then()._return(JExpr._this());
+          }
+        }
+        
+        final JConditional newListConditional = listAddJBlock._if(
+                JExpr.invoke(getGetterName(jsonPropertyName, param.type(), node)).eq(JExpr._null()));
+        final JBlock newListThenBlock = newListConditional._then();
+        final JBlock newListElseBlock = newListConditional._else();
+        final JVar newListVar = newListThenBlock.decl(JMod.FINAL, field.type(), "list",
+                JExpr._new(c.owner().ref(ArrayList.class)));
+        newListThenBlock.invoke(newListVar, "add").arg(listAddParam);
+        newListThenBlock.add(JExpr.invoke(getSetterName(jsonPropertyName, node)).arg(newListVar));
+        newListElseBlock.add(JExpr.invoke(getGetterName(jsonPropertyName, param.type(), node)).invoke("add").arg(listAddParam));
+
+        listAddJBlock._return(JExpr._this());
+      }
+
+      case "Map" -> {
+        JMethod mapAddMethod = c.method(
+                JMod.PUBLIC,
+                c,
+                "add" + StringUtils.capitalize(getFluentName(jsonPropertyName, node)));
+
+        mapAddMethod.param(field.type().boxify(), field.name());
+        JBlock mapAddJBlock = mapAddMethod.body();
+        mapAddJBlock.add(JExpr.invoke(getSetterName(jsonPropertyName, node)).arg(param));
+        mapAddJBlock._return(JExpr._this());
+      }
+    }
+
+    return fluentMethod;
+  }
+  
   private JMethod addGetter(JDefinedClass c, JFieldVar field, String jsonPropertyName, JsonNode node, boolean isRequired, boolean usesOptional) {
 
     JType type = getReturnType(c, field, isRequired, usesOptional);
@@ -313,8 +382,7 @@ public class PropertyRule implements Rule<JDefinedClass, JDefinedClass> {
     body.add(JExpr.cast(c, JExpr._this().ref("instance")).invoke(getSetterName(jsonPropertyName, node)).arg(param));
     body._return(JExpr._this());
 
-    // If this is a list or map object then add an "adder" method to the builder
-    // Add an adder method if this is a List field
+    // If this is a list or map object then add an "adder" method
     switch (field.type().erasure().name()) {
       case "List" -> {
         // Build up the method signature
@@ -357,7 +425,7 @@ public class PropertyRule implements Rule<JDefinedClass, JDefinedClass> {
                 builderClass.narrow(builderClass.typeParams()),
                 "add" + StringUtils.capitalize(getBuilderName(jsonPropertyName, node)));
 
-        JVar mapAddParam = mapAddMethod.param(field.type().boxify(), field.name());
+        mapAddMethod.param(field.type().boxify(), field.name());
         JBlock mapAddJBlock = mapAddMethod.body();
         mapAddJBlock.add(JExpr.cast(c, JExpr._this().ref("instance")).invoke(getSetterName(jsonPropertyName, node)).arg(param));
         mapAddJBlock._return(JExpr._this());
@@ -367,6 +435,10 @@ public class PropertyRule implements Rule<JDefinedClass, JDefinedClass> {
     return builderMethod;
   }
 
+  private String getFluentName(String propertyName, JsonNode node) {
+    return ruleFactory.getNameHelper().getAdderName(propertyName, node);
+  }
+  
   private String getBuilderName(String propertyName, JsonNode node) {
     return ruleFactory.getNameHelper().getBuilderName(propertyName, node);
   }

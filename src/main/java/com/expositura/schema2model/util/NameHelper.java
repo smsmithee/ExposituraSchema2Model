@@ -150,6 +150,23 @@ public class NameHelper {
   }
 
   /**
+   * Generate base method name for property (will add 'add' to it like 'addSomething').
+   *
+   * @param propertyName the name of the property being added by this adder
+   * @param node the JsonNode representing the schema for this property
+   * @return a safe, appropriate name for the base of the Java adder method
+   */
+  public String getAdderName(String propertyName, JsonNode node) {
+    propertyName = getPropertyNameForAccessor(propertyName, node);
+
+    if (Character.isUpperCase(propertyName.charAt(1))) {
+      return uncapitalize(propertyName);
+    } else {
+      return propertyName;
+    }
+  }
+  
+  /**
    * Generate builder method name for property (like withXxx).
    *
    * @param propertyName the name of the property being added by this builder

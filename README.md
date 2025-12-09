@@ -59,6 +59,7 @@ Configuration Options
 | formatTimes | boolean | false | Whether the fields of type `time` are formatted during serialization with a default pattern of HH:mm:ss.SSS |
 | formatTypeMapping | '<MapString,String>' | null | (no description) |
 | generateBuilders | boolean | false | Whether to generate builder-style methods of the form withXxx(value) (that return this), alongside the standard, void-return setters |
+| includeAdders | boolean | true | Whether to include adders for collection fields |
 | includeAdditionalProperties | boolean | true | Whether to allow 'additional properties' support in objects. Setting this to false will disable additional properties support, regardless of the input schema(s) |
 | includeAllPropertiesConstructor | boolean | true | The 'includeAllPropertiesConstructor' configuration option. This property works in collaboration with the isIncludeConstructors() configuration option and is incompatible with isConstructorsRequiredPropertiesOnly(), and will have no effect if isIncludeConstructors() is not set to true. If isIncludeConstructors() is set to true then this configuration determines whether the resulting object should include a constructor with all listed properties as parameters |
 | includeConstructorPropertiesAnnotation | boolean | false | (no description) |

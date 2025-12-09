@@ -542,6 +542,12 @@ public class Schema2ModelMojo extends AbstractMojo implements GenerationConfig {
   private boolean includeAdditionalProperties = true;
 
   /**
+   * Whether to include adders for collections
+   */
+  @Parameter(property = "jsonschema2pojo.includeAdders", defaultValue = "true")
+  private boolean includeAdders = true;
+  
+  /**
    * Whether to include getters or to omit this accessor method and create public fields instead
    *
    */
@@ -1053,6 +1059,11 @@ public class Schema2ModelMojo extends AbstractMojo implements GenerationConfig {
     return includeAdditionalProperties;
   }
 
+  @Override
+  public boolean isIncludeFluentMethods() {
+    return includeAdders;
+  }
+  
   @Override
   public boolean isIncludeGetters() {
     return includeGetters;

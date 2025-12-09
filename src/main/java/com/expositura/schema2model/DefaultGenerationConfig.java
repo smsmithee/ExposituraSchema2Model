@@ -341,6 +341,14 @@ public class DefaultGenerationConfig implements GenerationConfig {
    * @return <code>true</code>
    */
   @Override
+  public boolean isIncludeFluentMethods() {
+    return true;
+  }
+  
+  /**
+   * @return <code>true</code>
+   */
+  @Override
   public boolean isIncludeGetters() {
     return true;
   }
