@@ -335,9 +335,13 @@ public class PropertyRule implements Rule<JDefinedClass, JDefinedClass> {
     } else {
       JExpression isEmptyExp;
       switch (param.type().erasure().name()) {
-        case "List", "Map" ->
+        case "List" ->
           isEmptyExp = JOp.cond(
                   c.owner().ref("org.apache.commons.collections4.CollectionUtils").staticInvoke("isEmpty").arg(param),
+                  JExpr._null(), param);
+        case "Map" ->
+          isEmptyExp = JOp.cond(
+                  c.owner().ref("org.apache.commons.collections4.MapUtils").staticInvoke("isEmpty").arg(param),
                   JExpr._null(), param);
         case "Integer", "Double", "Float", "Boolean", "Long", "Object", "OffsetDateTime" ->
           isEmptyExp = param;
