@@ -55,9 +55,22 @@ public interface RuleLogger {
 
   boolean isWarnEnabled();
 
+  /**
+   * Log a trace message.
+   * @param msg The message.
+   */
   void trace(String msg);
 
+  /**
+   * Log a warn message with a throwable cause.
+   * @param s The message.
+   * @param e The root cause as a Throwable.
+   */
   void warn(String s, Throwable e);
 
+  /**
+   * Log a warn message.
+   * @param msg The message.
+   */
   void warn(String msg);
 }

@@ -32,11 +32,6 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v6
-        with:
-          persist-credentials: false
-
       - name: Setup Maven Action
         uses: s4u/setup-maven-action@v1.19.0
         with:
@@ -62,6 +57,13 @@ jobs:
           echo "      </properties>" >> settings.xml
           echo "    </profile>" >> settings.xml
           echo "  </profiles>" >> settings.xml
+          echo "  <mirrors>" >> settings.xml
+          echo "    <mirror>" >> settings.xml
+          echo "      <id>github</id>" >> settings.xml
+          echo "      <mirrorOf>central</mirrorOf>" >> settings.xml
+          echo "      <url>https://repo1.maven.org/maven2</url>" >> settings.xml
+          echo "    </mirror>" >> settings.xml
+          echo "  </mirrors>" >> settings.xml
           echo "</settings>" >> settings.xml
           
       # So that the jar versions are consistent with the docker tags, we set the version in the pom.xml

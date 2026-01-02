@@ -11,17 +11,39 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v6
-        with:
-          persist-credentials: false
-
       - name: Setup Maven Action
         uses: s4u/setup-maven-action@v1.19.0
         with:
           maven-version: 3.9.11
           java-distribution: 'temurin'
           java-version: '25'
+          
+      - name: Create settings.xml
+        run: |
+          echo "<settings>" > settings.xml
+          echo "  <servers>" >> settings.xml
+          echo "    <server>" >> settings.xml
+          echo "      <id>central</id>" >> settings.xml
+          echo "      <username>${{ secrets.CENTRAL_USERNAME }}</username>" >> settings.xml
+          echo "      <password>${{ secrets.CENTRAL_PASSWORD }}</password>" >> settings.xml
+          echo "    </server>" >> settings.xml
+          echo "  </servers>" >> settings.xml
+          echo "  <profiles>" >> settings.xml
+          echo "    <profile>" >> settings.xml
+          echo "      <id>deploy-to-central</id>" >> settings.xml
+          echo "      <properties>" >> settings.xml
+          echo "        <gpg.passphrase>${{ secrets.GPG_PASSPHRASE }}</gpg.passphrase>" >> settings.xml
+          echo "      </properties>" >> settings.xml
+          echo "    </profile>" >> settings.xml
+          echo "  </profiles>" >> settings.xml
+          echo "  <mirrors>" >> settings.xml
+          echo "    <mirror>" >> settings.xml
+          echo "      <id>github</id>" >> settings.xml
+          echo "      <mirrorOf>central</mirrorOf>" >> settings.xml
+          echo "      <url>https://repo1.maven.org/maven2</url>" >> settings.xml
+          echo "    </mirror>" >> settings.xml
+          echo "  </mirrors>" >> settings.xml
+          echo "</settings>" >> settings.xml
 
       - name: Build and test
         run: mvn --batch-mode --no-transfer-progress clean install
