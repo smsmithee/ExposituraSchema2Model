@@ -18,18 +18,26 @@ package com.expositura.schema2model;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.sun.codemodel.JDefinedClass;
 
+/**
+ * A partial implementation of the AbstractAnnotator interface that adds type info awareness to an annotator
+ * implementations.
+ */
 public abstract class AbstractTypeInfoAwareAnnotator extends AbstractAnnotator {
 
-  public AbstractTypeInfoAwareAnnotator(GenerationConfig generationConfig) {
+  /**
+   * Constructor that accepts a GenerationConfig for this annotator.
+   * @param generationConfig The configuration for this annotator.
+   */
+  public AbstractTypeInfoAwareAnnotator(final GenerationConfig generationConfig) {
     super(generationConfig);
   }
 
   @Override
-  public void typeInfo(JDefinedClass clazz, JsonNode node) {
+  public void typeInfo(final JDefinedClass clazz, final JsonNode node) {
     if (getGenerationConfig().isIncludeTypeInfo()) {
       // Have per-schema JavaTypeInfo configuration override what is defined in generation config; backward comparability
       if (node.has("deserializationClassProperty")) {
-        String annotationName = node.get("deserializationClassProperty").asText();
+        final String annotationName = node.get("deserializationClassProperty").asText();
         addJsonTypeInfoAnnotation(clazz, annotationName);
       } else {
         addJsonTypeInfoAnnotation(clazz, "@class");
@@ -37,16 +45,21 @@ public abstract class AbstractTypeInfoAwareAnnotator extends AbstractAnnotator {
     } else {
       // per-schema JsonTypeInfo configuration
       if (node.has("deserializationClassProperty")) {
-        String annotationName = node.get("deserializationClassProperty").asText();
+        final String annotationName = node.get("deserializationClassProperty").asText();
         addJsonTypeInfoAnnotation(clazz, annotationName);
       }
     }
   }
 
   @Override
-  public boolean isPolymorphicDeserializationSupported(JsonNode node) {
+  public boolean isPolymorphicDeserializationSupported(final JsonNode node) {
     return getGenerationConfig().isIncludeTypeInfo() || node.has("deserializationClassProperty");
   }
 
-  abstract protected void addJsonTypeInfoAnnotation(JDefinedClass clazz, String propertyName);
+  /**
+   * Add JSON type info to the indicated property on the indicated class.
+   * @param clazz The class to annotate.
+   * @param propertyName The property on the class.
+   */
+  abstract protected void addJsonTypeInfoAnnotation(final JDefinedClass clazz, final String propertyName);
 }
